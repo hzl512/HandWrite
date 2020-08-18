@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.king.signature.util.DisplayUtil;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.Editable;
 import android.util.Log;
 import android.util.TypedValue;
@@ -162,6 +164,9 @@ public class GridPaintActivity extends BaseActivity implements View.OnClickListe
         tvSave.setOnClickListener(this);
         mPenCircleView.setPaintColor(PenConfig.PAINT_COLOR);
         mPenCircleView.setRadiusLevel(PenConfig.PAINT_SIZE_LEVEL);
+
+        Typeface typeface = ResourcesCompat.getFont(this, R.font.simkai);
+        mTvName.setTypeface(typeface);
 
         mTvName.setText(strings[index]);
 
