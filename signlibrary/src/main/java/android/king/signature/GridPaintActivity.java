@@ -10,15 +10,19 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.king.signature.util.DisplayUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import android.king.signature.config.PenConfig;
@@ -51,6 +55,8 @@ public class GridPaintActivity extends BaseActivity implements View.OnClickListe
     private CircleImageView mEnterView;
     private CircleView mPenCircleView;
     private GridPaintView mPaintView;
+    private FrameLayout mContainer;
+    private TextView mTvName;
     private ProgressDialog mSaveProgressDlg;
     private static final int MSG_SAVE_SUCCESS = 1;
     private static final int MSG_SAVE_FAILED = 2;
@@ -66,8 +72,10 @@ public class GridPaintActivity extends BaseActivity implements View.OnClickListe
     private int lineSize;
     private int fontSize;
 
-
     private PaintSettingWindow settingWindow;
+
+    private String[] strings = new String[]{"刘", "德", "华"};//, "黄", "江", "雅", "慧"
+    private int index = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,6 +142,8 @@ public class GridPaintActivity extends BaseActivity implements View.OnClickListe
      */
     @Override
     protected void initView() {
+        mTvName = findViewById(R.id.tv_name);
+        mContainer = findViewById(R.id.fl_container);
         mPaintView = findViewById(R.id.paint_view);
         mDeleteView = findViewById(R.id.delete);
         mSpaceView = findViewById(R.id.space);
@@ -153,9 +163,20 @@ public class GridPaintActivity extends BaseActivity implements View.OnClickListe
         mPenCircleView.setPaintColor(PenConfig.PAINT_COLOR);
         mPenCircleView.setRadiusLevel(PenConfig.PAINT_SIZE_LEVEL);
 
-        int size = getResources().getDimensionPixelSize(R.dimen.sign_grid_size);
-        GridDrawable gridDrawable = new GridDrawable(size, size, Color.WHITE);
-        mPaintView.setBackground(gridDrawable);
+        mTvName.setText(strings[index]);
+
+        mContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                GridDrawable gridDrawable = new GridDrawable(mContainer.getWidth(), mContainer.getHeight(), Color.WHITE);
+                mContainer.setBackground(gridDrawable);
+                Log.e("GridPaintView", (float) (mContainer.getHeight() * 0.7) + "-getWidth");
+
+                mTvName.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (mContainer.getHeight() * 0.7));
+            }
+        });
+
+//        int size = getResources().getDimensionPixelSize(R.dimen.sign_grid_size);
 
         mPaintView.setGetTimeListener(new GridPaintView.WriteListener() {
             @Override
@@ -178,7 +199,9 @@ public class GridPaintActivity extends BaseActivity implements View.OnClickListe
             mEditView.setMaxWidth(maxWidth * 2 / 3);
         }
         mEditView.setTextSize(TypedValue.COMPLEX_UNIT_SP, fontSize);
-        mEditView.setLineHeight(DisplayUtil.dip2px(this, fontSize));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            mEditView.setLineHeight(DisplayUtil.dip2px(this, fontSize));
+        }
         mEditView.setHorizontallyScrolling(false);
         mEditView.requestFocus();
         if (bgColor != Color.TRANSPARENT) {
@@ -251,6 +274,13 @@ public class GridPaintActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case MSG_WRITE_OK:
+                if (index == strings.length - 1) {
+                    index = 0;
+                } else {
+                    index++;
+                }
+                mTvName.setText(strings[index]);
+
                 if (!mPaintView.isEmpty()) {
                     Bitmap bitmap = mPaintView.buildBitmap(isCrop, DisplayUtil.dip2px(GridPaintActivity.this, fontSize));
                     this.cacheEditable = mEditView.addBitmapToText(bitmap);

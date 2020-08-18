@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -16,11 +17,11 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:background="@drawable/sign_bg_shape"
         android:padding="10dp">
 
@@ -39,13 +40,12 @@
 
     </RelativeLayout>
 
-
     <LinearLayout
         android:id="@+id/bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
+        android:layout_weight="1"
         android:background="@drawable/sign_bg_shape"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -69,7 +69,8 @@
                     android:layout_height="@dimen/sign_tool_icon_size"
                     android:layout_centerInParent="true"
                     app:showOutBorder="true"
-                    app:sizeLevel="2" />
+                    app:sizeLevel="2"
+                    tools:ignore="MissingPrefix" />
             </RelativeLayout>
 
             <android.king.signature.view.CircleImageView
@@ -77,8 +78,9 @@
                 android:layout_width="@dimen/sign_tool_icon_size"
                 android:layout_height="@dimen/sign_tool_icon_size"
                 android:layout_weight="1"
+                android:src="@drawable/sign_ic_clear"
                 app:civ_border_width="1dp"
-                android:src="@drawable/sign_ic_clear" />
+                tools:ignore="MissingPrefix" />
 
             <android.king.signature.view.CircleImageView
                 android:id="@+id/space"
@@ -101,20 +103,33 @@
                 android:layout_weight="1"
                 android:src="@drawable/sign_ic_delete" />
 
-
         </LinearLayout>
 
-
-        <android.king.signature.view.GridPaintView
-            android:id="@+id/paint_view"
-            android:layout_width="@dimen/sign_grid_size"
-            android:layout_height="@dimen/sign_grid_size"
-            android:layout_gravity="center"
+        <FrameLayout
+            android:id="@+id/fl_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:maxWidth="250dp"
-            android:padding="10dp" />
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:text="李"
+                android:textColor="#c4c4c4"
+                android:textSize="250sp" />
+
+            <android.king.signature.view.GridPaintView
+                android:id="@+id/paint_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
 
     </LinearLayout>
-
 
 </LinearLayout>

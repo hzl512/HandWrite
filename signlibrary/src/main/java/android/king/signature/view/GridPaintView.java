@@ -1,5 +1,6 @@
 package android.king.signature.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.king.signature.util.DisplayUtil;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -53,22 +56,18 @@ public class GridPaintView extends View {
 
     public GridPaintView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        mWidth = (int) getResources().getDimension(R.dimen.sign_grid_size);
-        mHeight = (int) getResources().getDimension(R.dimen.sign_grid_size);
-        initParameter();
+        initParameter(context);
     }
 
-    private void initParameter() {
+    private void initParameter(Context context) {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-
-        mBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+        DisplayMetrics dm = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        mBitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
         mStokeBrushPen = new SteelPen();
-
         initPaint();
         initCanvas();
     }
-
 
     private void initPaint() {
         mPaint = new Paint();
@@ -167,6 +166,7 @@ public class GridPaintView extends View {
 
         /**
          * 书写完毕
+         *
          * @param time 当前时间
          */
         void onWriteCompleted(long time);
